@@ -1,0 +1,9 @@
+Código del proyecto ej53
+========================
+
+Documentación de todas las funciones y clases del código principal.
+
+.. automodule:: ej53.main
+   :members:
+   :undoc-members:
+   :show-inheritance:

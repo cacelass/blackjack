@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>test.test_proba &#8212; documentación de ej53 - </title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=cb25574f" />
+    <script src="../../_static/documentation_options.js?v=e2bb6099"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/translations.js?v=efdbd0b9"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para test.test_proba</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">ej53.main</span> <span class="kn">import</span> <span class="n">puntuacion_mano</span><span class="p">,</span> <span class="n">valor_carta</span>
+
+
+<div class="viewcode-block" id="test_valor_carta_numeros">
+<a class="viewcode-back" href="../../test.html#test.test_proba.test_valor_carta_numeros">[documentos]</a>
+<span class="k">def</span> <span class="nf">test_valor_carta_numeros</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">valor_carta</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="n">valor_carta</span><span class="p">(</span><span class="s1">&#39;10&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="n">valor_carta</span><span class="p">(</span><span class="s1">&#39;7&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">7</span></div>
+
+
+
+<div class="viewcode-block" id="test_valor_carta_figuras">
+<a class="viewcode-back" href="../../test.html#test.test_proba.test_valor_carta_figuras">[documentos]</a>
+<span class="k">def</span> <span class="nf">test_valor_carta_figuras</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">valor_carta</span><span class="p">(</span><span class="s1">&#39;J&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="n">valor_carta</span><span class="p">(</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="n">valor_carta</span><span class="p">(</span><span class="s1">&#39;K&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span></div>
+
+
+
+<div class="viewcode-block" id="test_valor_carta_as">
+<a class="viewcode-back" href="../../test.html#test.test_proba.test_valor_carta_as">[documentos]</a>
+<span class="k">def</span> <span class="nf">test_valor_carta_as</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">valor_carta</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">11</span></div>
+
+
+
+<div class="viewcode-block" id="test_puntuacion_mano_sin_as">
+<a class="viewcode-back" href="../../test.html#test.test_proba.test_puntuacion_mano_sin_as">[documentos]</a>
+<span class="k">def</span> <span class="nf">test_puntuacion_mano_sin_as</span><span class="p">():</span>
+    <span class="n">mano</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">puntuacion_mano</span><span class="p">(</span><span class="n">mano</span><span class="p">)</span> <span class="o">==</span> <span class="mi">17</span></div>
+
+
+
+<div class="viewcode-block" id="test_puntuacion_mano_con_un_as_sin_ajuste">
+<a class="viewcode-back" href="../../test.html#test.test_proba.test_puntuacion_mano_con_un_as_sin_ajuste">[documentos]</a>
+<span class="k">def</span> <span class="nf">test_puntuacion_mano_con_un_as_sin_ajuste</span><span class="p">():</span>
+    <span class="n">mano</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">puntuacion_mano</span><span class="p">(</span><span class="n">mano</span><span class="p">)</span> <span class="o">==</span> <span class="mi">19</span></div>
+
+
+
+<div class="viewcode-block" id="test_puntuacion_mano_con_un_as_con_ajuste">
+<a class="viewcode-back" href="../../test.html#test.test_proba.test_puntuacion_mano_con_un_as_con_ajuste">[documentos]</a>
+<span class="k">def</span> <span class="nf">test_puntuacion_mano_con_un_as_con_ajuste</span><span class="p">():</span>
+    <span class="n">mano</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">]</span>
+    <span class="c1"># 11 + 9 + 5 = 25 → As vale 1 → total 15</span>
+    <span class="k">assert</span> <span class="n">puntuacion_mano</span><span class="p">(</span><span class="n">mano</span><span class="p">)</span> <span class="o">==</span> <span class="mi">15</span></div>
+
+
+
+<div class="viewcode-block" id="test_puntuacion_mano_con_dos_ases">
+<a class="viewcode-back" href="../../test.html#test.test_proba.test_puntuacion_mano_con_dos_ases">[documentos]</a>
+<span class="k">def</span> <span class="nf">test_puntuacion_mano_con_dos_ases</span><span class="p">():</span>
+    <span class="n">mano</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">]</span>
+    <span class="c1"># 11 + 11 + 9 = 31</span>
+    <span class="c1"># ajuste: 21</span>
+    <span class="k">assert</span> <span class="n">puntuacion_mano</span><span class="p">(</span><span class="n">mano</span><span class="p">)</span> <span class="o">==</span> <span class="mi">21</span></div>
+
+
+
+<div class="viewcode-block" id="test_puntuacion_mano_se_pasa">
+<a class="viewcode-back" href="../../test.html#test.test_proba.test_puntuacion_mano_se_pasa">[documentos]</a>
+<span class="k">def</span> <span class="nf">test_puntuacion_mano_se_pasa</span><span class="p">():</span>
+    <span class="n">mano</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">puntuacion_mano</span><span class="p">(</span><span class="n">mano</span><span class="p">)</span> <span class="o">==</span> <span class="mi">24</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ej53</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../test.html">Tests del proyecto ej53</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Alejandro C.C..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

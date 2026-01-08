@@ -1,0 +1,123 @@
+#####################################################################################
+#--------------------------INICIALIZAR-----------------------------------------------
+#####################################################################################
+#
+# uv sync
+# source .venv/bin/activate
+# uv run pytest
+# sphinx-apidoc -o docs/source/ src/
+#####################################################################################
+
+
+
+#####################################################################################
+#--------------------------COSAS BASICAS---------------------------------------------
+#####################################################################################
+#
+# def <nombre_funcion>(var1>, <var2>):
+#     return = <var1> * <var2>
+#---------------Clases------------------------
+# class <nombre>:
+#   def __init__(self, <var1>, <var2>):
+#       self.<nombre_en_la_func1> = <var1>
+#       self.<nombre_en_la_func2> = <var2>
+#
+#   def mover(self, <var1>, <var1>):
+#       self.<nombre_en_la_func1> = <var1> + <var1> 
+#       self.<nombre_en_la_func2> = <var2> + <var2> 
+#
+#   objeto1 = <nombre_clase>(10, 10)
+#   objeto1.mover(10,-5) asi estariamos moviendo solo el objeto1
+#
+#---------------Herencia------------------
+# class Figura():
+#     def __init__(self):
+#         self.figura = 'figura'
+#     def __str__(self):
+#         return "Son un  {}.".format(self.figura)
+# class Poligono(Shape): #--> se usa el shape
+#     def __init__(self):
+#         self.figura = 'poligono'
+#         self.largo_lados = None
+#     def perimetro(self):
+#         return sum(self.largo_lados)
+#     def numeroLados(self):
+#         return len(self.largo_lados)
+#
+#---------------Sobrecarga----------------
+# class Persoa:
+#     def __init__(self, nome, idade):
+#         self.nome = nome
+#         self.idade = idade
+# class Alumno(Persoa):
+#     def __init__(self, nome, idade, codigo):
+#         Persoa.__init__(self, nome, idade)
+#         # ou tamen
+#         super().__init__(nome,idade)
+#         self.codigo = codigo
+#####################################################################################
+#--------------------------ALMACENAMIENTO--------------------------------------------
+#####################################################################################
+#
+# diccionario = [{"nombre":pepe, "edad":14},{"nombre":juan, "edad":14}]
+#---------------------------------------
+# listas = []
+#---------------------------------------
+# tuplas = ()
+#
+#####################################################################################
+#--------------------------TRATAR ERRORES--------------------------------------------
+#####################################################################################
+#
+# class ErrorNovo(Exception):
+#     def __init__(self,o_que_sexa):
+#         self.o_que_sexa = 'o_que_sexa'
+#     def __str__(self):
+#         return "Mensaxe da exceptcion"
+#
+# 
+# raise ErrorNovo("o que queira") #cando nalgun lugar do programa se quere lanzar a excepción
+#---------------------------------------
+# try:
+#   todo el codigo
+# except ErrorNovo as e:
+#   # fago o que teña que facer con esta excepcion
+# except OutroErro as e:
+#   # fago o que teña que facer con esta excepcion
+# except Exception:
+#   # Esta captura todo o demais
+#---------------------------------------
+# class Punto:
+#   def __init__(self, x, y):
+#     self.x = x
+#     self.y = y
+#   @property
+#   def x(self):
+#     return self._x
+#   @property
+#   def y(self):
+#     return self._y
+#   @x.setter
+#   def x(self,valor):
+#     if valor < 0:
+#       raise ValueError("Non pode haber unha X negativa")
+#     self._x = valor
+#   @y.setter
+#   def set_y(self,valor):
+#     if valor < 0:
+#       raise ValueError("Non pode haber unha Y negativa")
+#     self._y = valor
+#####################################################################################
+#--------------------------CHULETAS BASICAS TEST-------------------------------------
+#####################################################################################
+#
+# def test_<que_hace>():
+#     <var> = <funcion_a_probar>()
+#     assert <var> == True
+#
+#def test_coche_kilometraje_modificado():
+#    with pytest.raises(Error_de_kilometraje):
+#        coche2 = Coche("Ibiza", 120, 710000) 
+#        coche2.kilometraje=20000
+#        print(coche2.kilometraje)
+#####################################################################################
