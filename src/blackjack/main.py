@@ -3,51 +3,52 @@ import random
 """
 Módulo blackjack.
 
-Implementa una simulación de Blackjack con múltiples jugadores humanos
-contra un único dealer. Cada jugador juega su turno de forma secuencial
-y el dealer actúa según las reglas estándar (pide carta hasta 17).
+Simula un juego de Blackjack con múltiples jugadores humanos
+contra un único dealer. Cada jugador juega su turno de forma
+secual y el dealer actúa según las reglas estándar (pide carta
+hasta tener 17 o más puntos).
 
+Las cartas se muestran con valor y palo (ej: "3 de corazones").
 El objetivo es acercarse a 21 puntos sin superarlos.
 """
 
 
 def valor_carta(carta):
     """
-    Devuelve el valor numérico de una carta en Blackjack.
+    Devuelve el valor numérico de una carta de Blackjack.
 
-    Las figuras (J, Q, K) valen 10 puntos.
-    El As vale inicialmente 11 puntos (ajustable posteriormente).
+    Las figuras ('J','Q','K') valen 10. El As vale inicialmente 11.
 
-    :param carta: Representación de la carta ('A', 'K', 'Q', 'J', '2'...'10')
+    :param carta: Carta con valor y palo (ej: '3 de corazones')
     :type carta: str
     :return: Valor numérico de la carta
     :rtype: int
     """
-    if carta in ['J', 'Q', 'K']:
+    v = carta.split()[0]  # Obtener solo el valor sin palo
+    if v in ['J', 'Q', 'K']:
         return 10
-    if carta == 'A':
+    if v == 'A':
         return 11
-    return int(carta)
+    return int(v)
 
 
 def puntuacion_mano(mano):
     """
     Calcula la puntuación total de una mano de Blackjack.
 
-    Ajusta automáticamente el valor de los Ases de 11 a 1 si la puntuación
-    supera 21, evitando que el jugador se pase cuando sea posible.
+    Ajusta automáticamente los Ases de 11 a 1 si la puntuación
+    supera 21, evitando que el jugador se pase si es posible.
 
-    :param mano: Lista de cartas en la mano del jugador
+    :param mano: Lista de cartas de la mano
     :type mano: list[str]
-    :return: Puntuación total de la mano
+    :return: Puntos totales de la mano
     :rtype: int
     """
     total = 0
     ases = 0
-
     for carta in mano:
         total += valor_carta(carta)
-        if carta == 'A':
+        if carta.startswith('A'):
             ases += 1
 
     while total > 21 and ases > 0:
@@ -59,16 +60,19 @@ def puntuacion_mano(mano):
 
 def turno_jugador(nombre, mano, baralla):
     """
-    Gestiona el turno completo de un jugador.
+    Ejecuta el turno completo de un jugador humano.
 
-    El jugador puede pedir cartas o retirarse. El turno finaliza
-    cuando el jugador se retira o supera los 21 puntos.
+    Durante el turno, el jugador puede:
+    - Pedir carta ('p')
+    - Retirarse ('r')
+
+    Cada carta que obtiene se muestra con valor y palo.
 
     :param nombre: Nombre del jugador
     :type nombre: str
     :param mano: Mano actual del jugador
     :type mano: list[str]
-    :param baralla: Baraja de cartas disponible
+    :param baralla: Baraja de cartas disponibles
     :type baralla: list[str]
     :return: Puntuación final del jugador
     :rtype: int
@@ -87,7 +91,7 @@ def turno_jugador(nombre, mano, baralla):
         if opcion == 'p':
             carta = baralla.pop()
             mano.append(carta)
-            print(f"Carta obtenida: {carta}")
+            print(f"Te tocó un {carta}")
         elif opcion == 'r':
             print(f"{nombre} se retira con {puntos} puntos.")
             return puntos
@@ -99,13 +103,26 @@ def main():
     """
     Función principal del juego de Blackjack.
 
-    Solicita el número de jugadores y sus nombres, reparte las cartas
-    iniciales, gestiona los turnos de cada jugador y finalmente ejecuta
-    el turno del dealer y muestra los resultados finales.
+    Flujo del juego:
+
+    1. Crear baraja completa con palos y valores.
+    2. Preguntar número de jugadores y sus nombres.
+    3. Repartir 2 cartas iniciales a cada jugador y al dealer.
+       El dealer muestra solo una carta.
+    4. Ejecutar los turnos de cada jugador humano.
+    5. Ejecutar el turno del dealer automáticamente (pide carta hasta 17).
+    6. Mostrar resultados finales comparando puntuaciones.
+
+    Cada carta se muestra con su palo y valor, y las cartas se
+    extraen de la baraja para garantizar que no se repitan.
     """
-    baralla = ['A','K','Q','J','10','9','8','7','6','5','4','3','2'] * 4
+    # Crear baraja
+    palos = ["corazones", "diamantes", "tréboles", "picas"]
+    valores = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
+    baralla = [f"{v} de {p}" for p in palos for v in valores]
     random.shuffle(baralla)
 
+    # Pedir número de jugadores
     while True:
         try:
             n = int(input("¿Cuántos jugadores? "))
@@ -115,36 +132,45 @@ def main():
             pass
         print("Introduce un número válido.")
 
+    # Crear jugadores
     jugadores = {}
-
     for i in range(n):
         nombre = input(f"Nombre del jugador {i+1}: ")
         jugadores[nombre] = {"mano": []}
 
+    # Dealer
     mano_dealer = []
 
-    for jugador in jugadores.values():
-        jugador["mano"].append(baralla.pop())
-        jugador["mano"].append(baralla.pop())
+    # Reparto inicial: 2 cartas por jugador
+    for nombre, data in jugadores.items():
+        carta1 = baralla.pop()
+        carta2 = baralla.pop()
+        data["mano"].extend([carta1, carta2])
+        print(f"{nombre} recibe: {carta1}, {carta2}")
 
-    mano_dealer.append(baralla.pop())
-    print(f"\nEl dealer muestra: {mano_dealer[0]}")
+    # Reparto dealer: 1 visible, 1 oculta
+    carta_visible = baralla.pop()
+    carta_oculta = baralla.pop()
+    mano_dealer.extend([carta_visible, carta_oculta])
+    print(f"\nEl dealer muestra: {carta_visible}")
 
+    # Turno de jugadores
     resultados = {}
     for nombre, data in jugadores.items():
         puntos = turno_jugador(nombre, data["mano"], baralla)
         resultados[nombre] = puntos
 
-    mano_dealer.append(baralla.pop())
+    # Turno del dealer
     puntos_dealer = puntuacion_mano(mano_dealer)
-    print(f"\nMano del dealer: {mano_dealer} -> {puntos_dealer} puntos")
+    print(f"\nMano completa del dealer: {mano_dealer} -> {puntos_dealer} puntos")
 
     while puntos_dealer < 17:
         carta = baralla.pop()
         mano_dealer.append(carta)
         puntos_dealer = puntuacion_mano(mano_dealer)
-        print(f"El dealer coge {carta} -> {puntos_dealer}")
+        print(f"El dealer coge {carta} -> {puntos_dealer} puntos")
 
+    # Resultados finales
     print("\nRESULTADOS FINALES")
     for nombre, puntos in resultados.items():
         if puntos > 21:

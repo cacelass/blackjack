@@ -1,9 +1,9 @@
-Código del proyecto ej53
+Código del proyecto blackjack
 ========================
 
 Documentación de todas las funciones y clases del código principal.
 
-.. automodule:: ej53.main
+.. automodule:: blackjack.main
    :members:
    :undoc-members:
    :show-inheritance:

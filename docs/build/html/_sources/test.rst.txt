@@ -1,4 +1,4 @@
-Tests del proyecto ej53
+Tests del proyecto blackjack
 =======================
 
 Documentación de todos los tests del proyecto.

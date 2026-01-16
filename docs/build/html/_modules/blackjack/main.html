@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>blackjack.main &#8212; documentación de blackjack - </title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=e2bb6099"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para blackjack.main</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Módulo blackjack.</span>
+
+<span class="sd">Implementa una simulación de Blackjack con múltiples jugadores humanos</span>
+<span class="sd">contra un único dealer. Cada jugador juega su turno de forma secuencial</span>
+<span class="sd">y el dealer actúa según las reglas estándar (pide carta hasta 17).</span>
+
+<span class="sd">El objetivo es acercarse a 21 puntos sin superarlos.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="valor_carta">
+<a class="viewcode-back" href="../../blackjack.html#blackjack.main.valor_carta">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">valor_carta</span><span class="p">(</span><span class="n">carta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Devuelve el valor numérico de una carta en Blackjack.</span>
+
+<span class="sd">    Las figuras (J, Q, K) valen 10 puntos.</span>
+<span class="sd">    El As vale inicialmente 11 puntos (ajustable posteriormente).</span>
+
+<span class="sd">    :param carta: Representación de la carta (&#39;A&#39;, &#39;K&#39;, &#39;Q&#39;, &#39;J&#39;, &#39;2&#39;...&#39;10&#39;)</span>
+<span class="sd">    :type carta: str</span>
+<span class="sd">    :return: Valor numérico de la carta</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">carta</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;J&#39;</span><span class="p">,</span> <span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="mi">10</span>
+    <span class="k">if</span> <span class="n">carta</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">11</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">carta</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="puntuacion_mano">
+<a class="viewcode-back" href="../../blackjack.html#blackjack.main.puntuacion_mano">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">puntuacion_mano</span><span class="p">(</span><span class="n">mano</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calcula la puntuación total de una mano de Blackjack.</span>
+
+<span class="sd">    Ajusta automáticamente el valor de los Ases de 11 a 1 si la puntuación</span>
+<span class="sd">    supera 21, evitando que el jugador se pase cuando sea posible.</span>
+
+<span class="sd">    :param mano: Lista de cartas en la mano del jugador</span>
+<span class="sd">    :type mano: list[str]</span>
+<span class="sd">    :return: Puntuación total de la mano</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ases</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">carta</span> <span class="ow">in</span> <span class="n">mano</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">valor_carta</span><span class="p">(</span><span class="n">carta</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">carta</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span>
+            <span class="n">ases</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">while</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">21</span> <span class="ow">and</span> <span class="n">ases</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">-=</span> <span class="mi">10</span>
+        <span class="n">ases</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">total</span></div>
+
+
+
+<div class="viewcode-block" id="turno_jugador">
+<a class="viewcode-back" href="../../blackjack.html#blackjack.main.turno_jugador">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">turno_jugador</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">mano</span><span class="p">,</span> <span class="n">baralla</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gestiona el turno completo de un jugador.</span>
+
+<span class="sd">    El jugador puede pedir cartas o retirarse. El turno finaliza</span>
+<span class="sd">    cuando el jugador se retira o supera los 21 puntos.</span>
+
+<span class="sd">    :param nombre: Nombre del jugador</span>
+<span class="sd">    :type nombre: str</span>
+<span class="sd">    :param mano: Mano actual del jugador</span>
+<span class="sd">    :type mano: list[str]</span>
+<span class="sd">    :param baralla: Baraja de cartas disponible</span>
+<span class="sd">    :type baralla: list[str]</span>
+<span class="sd">    :return: Puntuación final del jugador</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">puntos</span> <span class="o">=</span> <span class="n">puntuacion_mano</span><span class="p">(</span><span class="n">mano</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Jugador </span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mano: </span><span class="si">{</span><span class="n">mano</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">puntos</span><span class="si">}</span><span class="s2"> puntos&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">puntos</span> <span class="o">&gt;</span> <span class="mi">21</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Te pasaste de 21.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">puntos</span>
+
+        <span class="n">opcion</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Pedir carta (p) o retirarte (r)? &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span>
+            <span class="n">carta</span> <span class="o">=</span> <span class="n">baralla</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">mano</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">carta</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Carta obtenida: </span><span class="si">{</span><span class="n">carta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opcion</span> <span class="o">==</span> <span class="s1">&#39;r&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2"> se retira con </span><span class="si">{</span><span class="n">puntos</span><span class="si">}</span><span class="s2"> puntos.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">puntos</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opción no válida.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../blackjack.html#blackjack.main.main">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Función principal del juego de Blackjack.</span>
+
+<span class="sd">    Solicita el número de jugadores y sus nombres, reparte las cartas</span>
+<span class="sd">    iniciales, gestiona los turnos de cada jugador y finalmente ejecuta</span>
+<span class="sd">    el turno del dealer y muestra los resultados finales.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">baralla</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;K&#39;</span><span class="p">,</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span><span class="s1">&#39;J&#39;</span><span class="p">,</span><span class="s1">&#39;10&#39;</span><span class="p">,</span><span class="s1">&#39;9&#39;</span><span class="p">,</span><span class="s1">&#39;8&#39;</span><span class="p">,</span><span class="s1">&#39;7&#39;</span><span class="p">,</span><span class="s1">&#39;6&#39;</span><span class="p">,</span><span class="s1">&#39;5&#39;</span><span class="p">,</span><span class="s1">&#39;4&#39;</span><span class="p">,</span><span class="s1">&#39;3&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">baralla</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;¿Cuántos jugadores? &quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Introduce un número válido.&quot;</span><span class="p">)</span>
+
+    <span class="n">jugadores</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nombre del jugador </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: &quot;</span><span class="p">)</span>
+        <span class="n">jugadores</span><span class="p">[</span><span class="n">nombre</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;mano&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+
+    <span class="n">mano_dealer</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">jugador</span> <span class="ow">in</span> <span class="n">jugadores</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">jugador</span><span class="p">[</span><span class="s2">&quot;mano&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">baralla</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+        <span class="n">jugador</span><span class="p">[</span><span class="s2">&quot;mano&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">baralla</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+
+    <span class="n">mano_dealer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">baralla</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">El dealer muestra: </span><span class="si">{</span><span class="n">mano_dealer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">resultados</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">jugadores</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">puntos</span> <span class="o">=</span> <span class="n">turno_jugador</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;mano&quot;</span><span class="p">],</span> <span class="n">baralla</span><span class="p">)</span>
+        <span class="n">resultados</span><span class="p">[</span><span class="n">nombre</span><span class="p">]</span> <span class="o">=</span> <span class="n">puntos</span>
+
+    <span class="n">mano_dealer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">baralla</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+    <span class="n">puntos_dealer</span> <span class="o">=</span> <span class="n">puntuacion_mano</span><span class="p">(</span><span class="n">mano_dealer</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Mano del dealer: </span><span class="si">{</span><span class="n">mano_dealer</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">puntos_dealer</span><span class="si">}</span><span class="s2"> puntos&quot;</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="n">puntos_dealer</span> <span class="o">&lt;</span> <span class="mi">17</span><span class="p">:</span>
+        <span class="n">carta</span> <span class="o">=</span> <span class="n">baralla</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">mano_dealer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">carta</span><span class="p">)</span>
+        <span class="n">puntos_dealer</span> <span class="o">=</span> <span class="n">puntuacion_mano</span><span class="p">(</span><span class="n">mano_dealer</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;El dealer coge </span><span class="si">{</span><span class="n">carta</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">puntos_dealer</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">RESULTADOS FINALES&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">puntos</span> <span class="ow">in</span> <span class="n">resultados</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">puntos</span> <span class="o">&gt;</span> <span class="mi">21</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">: pierde (se pasó)&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">puntos_dealer</span> <span class="o">&gt;</span> <span class="mi">21</span> <span class="ow">or</span> <span class="n">puntos</span> <span class="o">&gt;</span> <span class="n">puntos_dealer</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">: GANA&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">puntos</span> <span class="o">==</span> <span class="n">puntos_dealer</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">: EMPATA&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nombre</span><span class="si">}</span><span class="s2">: pierde&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">blackjack</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../test.html">Tests del proyecto blackjack</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Alejandro C.C..
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
